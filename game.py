@@ -19,5 +19,5 @@ class Game:
                 pygame.display.update()
 
 
- 
+new_game = Game()
 
