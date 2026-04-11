@@ -22,22 +22,21 @@ class Dino():
         self.yd = self.YD
         self.rect = self.img_walk1.get_rect(topleft = self.location)
 
-    def update(self, surface):
-        if self.state:
+    def update(self, Surface):
+        if self.state == True:
             if self.walk_counter < self.fps:
                 if self.walk_counter % self.walk_slicer == 0:
                     self.walk_img = not self.walk_img
                 self.walk_counter += 1
-
             else:
                 self.walk_counter = 0
 
             if self.walk_img:
-                surface.blit(self.img_walk1, self.location)
+                Surface.blit(self.img_walk1, self.location)
             else:
-                surface.blit(self.img_walk2, self.location)
+                Surface.blit(self.img_walk2, self.location)
 
-        else:
+        elif self.state == False:
             if self.yd > 0: # going up
                 if self.y_loc < self.jump_threshold:
                     self.yd *= -1
@@ -48,7 +47,7 @@ class Dino():
                     self.yd = self.YD
             
             self.y_loc -= self.yd
-            surface.blit(self.img_jump, (self.x_loc, self.y_loc))
+            Surface.blit(self.img_jump, (self.x_loc, self.y_loc))
             self.rect.topleft = (self.x_loc, self.y_loc)
 
 

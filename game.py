@@ -2,6 +2,7 @@ import pygame
 import sys
 from dino import Dino
 from constants import *
+from ground import GND
 
 
 class Game:
@@ -13,6 +14,7 @@ class Game:
         self.font = pygame.font.Font(None, 22)
         self.hscore = self.load_high_score()
         self.score = 0
+        self.ground = GND(5 , WINDOW_SIZE[1] - 150)
         self.player1 = Dino(DINO_INIT_LOCATION, self.fps) # Dino location in display
         self.clock = pygame.time.Clock()
         self.run()
@@ -24,8 +26,8 @@ class Game:
 
     def show_score(self, color):
         score = str(self.score)
-        _score = self.font.render((6 - len(score)) * '0' + score , True, WHITE)
-        _hscore = self.font.render("HI: " + self.hscore, True, WHITE)
+        _score = self.font.render((6 - len(score)) * '0' + score , True, color)
+        _hscore = self.font.render("HI: " + self.hscore, True, color)
         self.game_display.blit(_score, (910, 20))
         self.game_display.blit(_hscore, (800, 20))
 
@@ -36,11 +38,9 @@ class Game:
                 file.write(_str)
 
     def run(self):
-        ground = pygame.image.load("./assets/desert.png")
-
         while True:
-            self.game_display.fill((0,0,0))
-            self.show_score()
+            self.game_display.fill(BLACK)
+            self.show_score(WHITE)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -49,10 +49,8 @@ class Game:
                     if event.key == pygame.K_SPACE:
                         self.player1.jump()   
             
-            self.game_display.blit(ground, (0, 450)) # Ground location in display
+            self.ground.update(self.game_display)
             self.player1.update(self.game_display)
-
-            #
             pygame.display.update()
             self.score += 1
             self.clock.tick(self.fps)
