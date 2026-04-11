@@ -3,8 +3,8 @@ import sys
 from dino import Dino
 from constants import *
 from ground import GND
-
-
+from day import Day_Or_Night
+from obstacles import Obstacle, Obstacles
 class Game:
     fps = 60
     def __init__(self):
@@ -14,7 +14,9 @@ class Game:
         self.font = pygame.font.Font(None, 22)
         self.hscore = self.load_high_score()
         self.score = 0
+        self.day = Day_Or_Night(self.fps, 7)
         self.ground = GND(5 , WINDOW_SIZE[1] - 150)
+        self.obss = Obstacles(y=440, min_gap=450, speed=5)
         self.player1 = Dino(DINO_INIT_LOCATION, self.fps) # Dino location in display
         self.clock = pygame.time.Clock()
         self.run()
@@ -39,8 +41,8 @@ class Game:
 
     def run(self):
         while True:
-            self.game_display.fill(BLACK)
-            self.show_score(WHITE)
+            current_color = self.day.update(self.game_display)
+            self.show_score(current_color)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -50,7 +52,9 @@ class Game:
                         self.player1.jump()   
             
             self.ground.update(self.game_display)
+            self.obss.update(self.game_display)
             self.player1.update(self.game_display)
+            self.obss.check()
             pygame.display.update()
             self.score += 1
             self.clock.tick(self.fps)
